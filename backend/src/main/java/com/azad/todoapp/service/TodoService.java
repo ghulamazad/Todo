@@ -1,5 +1,6 @@
 package com.azad.todoapp.service;
 
+import com.azad.todoapp.controller.SearchRequestTodo;
 import com.azad.todoapp.enums.TodoStatus;
 import com.azad.todoapp.exception.ApiError;
 import com.azad.todoapp.model.Project;
@@ -27,7 +28,17 @@ public class TodoService {
     }
 
     public List<Todo> getTodos(Integer projectId) {
-        return todoRepository.findByProjectId(projectId);
+        return todoRepository.findByProjectIdAndIsDeleted(projectId, false);
+    }
+
+    public void setIsDeletedTodos(Integer id) throws  ApiError{
+        var todo = todoRepository.findById(id);
+        if(todo.isPresent()){
+            todo.get().setIsDeleted(true);
+            todoRepository.save(todo.get());
+        }else{
+            throw new ApiError("Todo not found.", HttpStatus.NOT_FOUND);
+        }
     }
 
     public void deleteTodos(Integer id) {
@@ -42,6 +53,7 @@ public class TodoService {
                     .status(TodoStatus.PENDING)
                     .created(new Date())
                     .updated(new Date())
+                    .isDeleted(false)
                     .project(project)
                     .build();
             todoRepository.save(newTodo);
@@ -76,5 +88,23 @@ public class TodoService {
         existingTodo.setUpdated(new Date());
         todoRepository.save(existingTodo);
         return existingTodo;
+    }
+
+    public List<Todo> getAllDeletedTodos() {
+        return todoRepository.findByIsDeleted(true);
+    }
+
+    public boolean restoredTodos(Integer todoId) throws ApiError {
+        var todo = todoRepository.findById(todoId);
+        if(todo.isEmpty()){
+            throw new ApiError("Todo is not found");
+        }
+        todo.get().setIsDeleted(false);
+        todoRepository.save(todo.get());
+        return true;
+    }
+
+    public List<Todo> searchTodo(SearchRequestTodo requestTodo) {
+       return todoRepository.findByProjectIdAndDescriptionContaining(requestTodo.projectId(),requestTodo.todo());
     }
 }
