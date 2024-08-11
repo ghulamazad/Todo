@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class Todo implements Serializable {
     private TodoStatus status;
     private Date created;
     private Date updated;
+    private Boolean isDeleted;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Project project;

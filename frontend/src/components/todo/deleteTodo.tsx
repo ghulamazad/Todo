@@ -6,12 +6,12 @@ import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 
 type DeleteTodoProps = {
-  projectId: number;
+  projectId?: number;
   id: number;
 };
 
 export const DeleteTodo: React.FC<DeleteTodoProps> = ({ projectId, id }) => {
-  const onDeleteTodo = async (id: number, projectId: number) => {
+  const onDeleteTodo = async (id: number, projectId?: number) => {
     try {
       await deleteTodo(id, projectId);
       toast({
@@ -26,8 +26,8 @@ export const DeleteTodo: React.FC<DeleteTodoProps> = ({ projectId, id }) => {
   return (
     <Button
       onClick={() => onDeleteTodo(id, projectId)}
-      variant='destructive'
-      className='mr-2'
+      variant="destructive"
+      className="mr-2"
     >
       <Trash />
     </Button>

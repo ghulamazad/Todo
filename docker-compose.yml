@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=tododb
+      - POSTGRES_USER=ghulam
+      - POSTGRES_PASSWORD=ghulam
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todo-net
+  springboot:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - postgres
+    networks:
+      - todo-net
+
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - todo-net
+
+volumes:
+  postgres_data:
+
+networks:
+  todo-net:
+    driver: bridge
