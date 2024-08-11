@@ -38,7 +38,7 @@ export const TodoList: React.FC<TodoListProps> = ({
               className="py-4 flex items-center justify-between"
             >
               <div className="flex items-center space-x-2">
-                {isDisabled && projectId && (
+                {projectId && (
                   <MarkCompleteTodo
                     id={todo.id}
                     projectId={projectId}

@@ -32,7 +32,7 @@ const ViewProject = async ({ params }: any) => {
             </h1>
           </UpsertProject>
           <div className="flex justify-between">
-            <SearchTodo searchTodo={searchTodo} />
+            {/* <SearchTodo searchTodo={searchTodo} /> */}
             <Link href={"/"}>Back</Link>
           </div>
         </div>
